@@ -3,15 +3,15 @@ package simulation
 // DONTCOVER
 
 import (
+	"cosmossdk.io/math"
 	"encoding/json"
 	"fmt"
-	"math/rand"
-	"time"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/staking/types"
+	"math/rand"
+	"time"
 )
 
 // Simulation parameter constants
@@ -44,6 +44,7 @@ func RandomizedGenState(simState *module.SimulationState) {
 		maxVals           uint32
 		histEntries       uint32
 		minCommissionRate sdk.Dec
+		minTokenAmount    math.Uint
 	)
 
 	simState.AppParams.GetOrGenerate(
@@ -64,7 +65,7 @@ func RandomizedGenState(simState *module.SimulationState) {
 	// NOTE: the slashing module need to be defined after the staking module on the
 	// NewSimulationManager constructor for this to work
 	simState.UnbondTime = unbondTime
-	params := types.NewParams(simState.UnbondTime, maxVals, 7, histEntries, sdk.DefaultBondDenom, minCommissionRate)
+	params := types.NewParams(simState.UnbondTime, maxVals, 7, histEntries, sdk.DefaultBondDenom, minCommissionRate, minTokenAmount)
 
 	// validators & delegations
 	var (

@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"cosmossdk.io/math"
 	"strconv"
 	"time"
 
@@ -9,7 +10,6 @@ import (
 	"google.golang.org/grpc/status"
 
 	"github.com/armon/go-metrics"
-
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
 	"github.com/cosmos/cosmos-sdk/telemetry"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -62,7 +62,13 @@ func (k msgServer) CreateValidator(goCtx context.Context, msg *types.MsgCreateVa
 			sdkerrors.ErrInvalidRequest, "invalid coin denomination: got %s, expected %s", msg.Value.Denom, bondDenom,
 		)
 	}
-
+	amountValue := msg.Value.Amount
+	k.Logger(ctx).Info("################# Amount Value #################", "amountValue", amountValue, "config min token amount", k.MinTokenAmount(ctx))
+	if math.NewUint(amountValue.Uint64()).LT(k.MinTokenAmount(ctx)) {
+		return nil, sdkerrors.Wrapf(
+			sdkerrors.ErrInvalidRequest, "invalid coin amount: got %s, expected %s", msg.Value.Amount, k.MinTokenAmount(ctx),
+		)
+	}
 	if _, err := msg.Description.EnsureLength(); err != nil {
 		return nil, err
 	}
