@@ -29,13 +29,13 @@ const (
 	// value by not adding the staking module to the application module manager's
 	// SetOrderBeginBlockers.
 	DefaultHistoricalEntries uint32 = 10000
+
+	// DefaultMinTokenAmount is set to 1 million.
+	DefaultMinTokenAmount string = 1000000000000000000000000
 )
 
 // DefaultMinCommissionRate is set to 0%
 var DefaultMinCommissionRate = sdk.ZeroDec()
-
-// DefaultMinTokenAmount is set to 1 million.
-var DefaultMinTokenAmount = math.NewUintFromString("1000000000000000000000000")
 
 var (
 	KeyUnbondingTime     = []byte("UnbondingTime")
@@ -55,7 +55,7 @@ func ParamKeyTable() paramtypes.KeyTable {
 }
 
 // NewParams creates a new Params instance
-func NewParams(unbondingTime time.Duration, maxValidators, maxEntries, historicalEntries uint32, bondDenom string, minCommissionRate sdk.Dec, minTokenAmount math.Uint) Params {
+func NewParams(unbondingTime time.Duration, maxValidators, maxEntries, historicalEntries uint32, bondDenom string, minCommissionRate sdk.Dec, minTokenAmount string) Params {
 	return Params{
 		UnbondingTime:     unbondingTime,
 		MaxValidators:     maxValidators,
@@ -63,7 +63,7 @@ func NewParams(unbondingTime time.Duration, maxValidators, maxEntries, historica
 		HistoricalEntries: historicalEntries,
 		BondDenom:         bondDenom,
 		MinCommissionRate: minCommissionRate,
-		MinTokenAmount:    minTokenAmount,
+		MinTokenAmount:    math.NewUintFromString(minTokenAmount),
 	}
 }
 
@@ -244,7 +244,7 @@ func validateMinTokenAmount(i interface{}) error {
 		return fmt.Errorf("invalid parameter type: %T", i)
 	}
 
-	if !v.Equal(DefaultMinTokenAmount) {
+	if !v.Equal(math.NewUintFromString(DefaultMinTokenAmount)) {
 		return fmt.Errorf("minimum token amount must equal 1000000000000000000000000.", v)
 	}
 
