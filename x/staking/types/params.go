@@ -31,7 +31,7 @@ const (
 	DefaultHistoricalEntries uint32 = 10000
 
 	// DefaultMinTokenAmount is set to 1 million.
-	DefaultMinTokenAmount string = 1000000000000000000000000
+	DefaultMinTokenAmount string = "1000000000000000000000000"
 )
 
 // DefaultMinCommissionRate is set to 0%

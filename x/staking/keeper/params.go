@@ -69,7 +69,7 @@ func (k Keeper) GetParams(ctx sdk.Context) types.Params {
 		k.HistoricalEntries(ctx),
 		k.BondDenom(ctx),
 		k.MinCommissionRate(ctx),
-		k.MinTokenAmount(ctx),
+		k.MinTokenAmount(ctx).String(),
 	)
 }
 

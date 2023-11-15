@@ -24,7 +24,6 @@ func (k Keeper) InitGenesis(ctx sdk.Context, data *types.GenesisState) (res []ab
 	// first TM block is at height 1, so state updates applied from
 	// genesis.json are in block 0.
 	ctx = ctx.WithBlockHeight(1 - sdk.ValidatorUpdateDelay)
-
 	k.SetParams(ctx, data.Params)
 	k.SetLastTotalPower(ctx, data.LastTotalPower)
 
