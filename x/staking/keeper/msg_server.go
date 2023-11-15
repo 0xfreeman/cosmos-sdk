@@ -63,8 +63,14 @@ func (k msgServer) CreateValidator(goCtx context.Context, msg *types.MsgCreateVa
 		)
 	}
 	amountValue := msg.Value.Amount
-	k.Logger(ctx).Info("################# Amount Value #################", "amountValue", amountValue, "config min token amount", k.MinTokenAmount(ctx))
-	if math.NewUint(amountValue.Uint64()).LT(k.MinTokenAmount(ctx)) {
+	k.Logger(ctx).Info(
+		"################# Amount Value #################",
+		"amountValue", amountValue,
+		"config min token amount", k.MinTokenAmount(ctx),
+	)
+	amountValueUint := math.NewUintFromString(amountValue.String())
+	minTokenAmountUint := math.NewUintFromString(k.MinTokenAmount(ctx).String())
+	if amountValueUint.LT(minTokenAmountUint) {
 		return nil, sdkerrors.Wrapf(
 			sdkerrors.ErrInvalidRequest, "invalid coin amount: got %s, expected %s", msg.Value.Amount, k.MinTokenAmount(ctx),
 		)
